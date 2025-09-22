@@ -84,25 +84,23 @@ sudo chown $USER:$USER $BUILD_ROOT;
 tmp_cpus=$(grep -w processor /proc/cpuinfo|wc -l);
 ```
 
-#### (1) 编译 ncurses 6.3 (静态)
+#### (1) 编译 ncurses 6.5 (静态)
 
 ```bash
 cd $BUILD_ROOT;
-wget https://invisible-island.net/archives/ncurses/ncurses-6.3.tar.gz -q --no-check-certificate;
-tar -zxvf ncurses-6.3.tar.gz;
-cd ncurses-6.3;
-./configure --with-termlib CC=clang CXX=clang++ CFLAGS=-fPIC CPPFLAGS=-fPIC CFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" CXXFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" --with-terminfo-dirs=/etc/terminfo:/lib/terminfo:/usr/share/terminfo --disable-overwrite --disable-root-environ;
+git clone https://gitcode.com/openharmony/third_party_ncurses.git -b OpenHarmony-v6.0-Release ncurses-6.5;
+cd ncurses-6.5;
+./configure --with-termlib CC=clang CXX=clang++ CFLAGS=-fPIC CPPFLAGS=-fPIC CFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" CXXFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" --with-terminfo-dirs=/etc/terminfo:/lib/terminfo:/usr/share/terminfo --disable-widec --disable-overwrite --disable-root-environ;
 make -j ${tmp_cpus};
-make install DESTDIR=${BUILD_ROOT}/ncurses-6.3;
+make install DESTDIR=${BUILD_ROOT}/ncurses-6.5;
 ```
 
 #### (2) 编译 libedit 3.1 (静态)
 
 ```bash
 cd $BUILD_ROOT;
-wget https://www.thrysoee.dk/editline/libedit-20250104-3.1.tar.gz -q --no-check-certificate;
-tar -zxvf libedit-20250104-3.1.tar.gz;
-cd libedit-20250104-3.1;
+git clone https://gitcode.com/openharmony/third_party_libedit.git -b OpenHarmony-5.0.0-Release libedit-3.1;
+cd libedit-3.1;
 ./configure --with-pic --enable-shared=no --prefix=${BUILD_ROOT}/libedit-3.1;
 make -j ${tmp_cpus};
 make install;
