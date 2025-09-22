@@ -92,7 +92,7 @@ git clone https://gitcode.com/openharmony/third_party_ncurses.git -b OpenHarmony
 cd ncurses-6.5;
 ./configure --with-termlib CC=clang CXX=clang++ CFLAGS=-fPIC CPPFLAGS=-fPIC CFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" CXXFLAGS="-fstack-protector-strong -Wl,-z,relro,-z,now,-z,noexecstack" --with-terminfo-dirs=/etc/terminfo:/lib/terminfo:/usr/share/terminfo --disable-widec --disable-overwrite --disable-root-environ;
 make -j ${tmp_cpus};
-make install DESTDIR=${BUILD_ROOT}/ncurses-6.3;
+make install DESTDIR=${BUILD_ROOT}/ncurses-6.5;
 ```
 
 #### (2) 编译 libedit 3.1 (静态)
