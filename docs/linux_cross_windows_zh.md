@@ -211,14 +211,14 @@ cp -rf ${WORKSPACE}/cangjie_runtime/runtime/output/common/windows_release_x86_64
 ### 4.3 编译仓颉标准库
 
 ```bash
-cd ${WORKSPACE}/cangjie_runtime/std;
+cd ${WORKSPACE}/cangjie_runtime/stdlib;
 # 编译linux x64 std
 python3 build.py clean;
 python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/target \
   --target-lib=$OPENSSL_PATH;
 python3 build.py install;
-cp -rf ${WORKSPACE}/cangjie_runtime/std/output/* ${WORKSPACE}/cangjie_compiler/output/;
+cp -rf ${WORKSPACE}/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output/;
 
 # 编译windows x64 std
 python3 build.py clean;
@@ -229,8 +229,8 @@ python3 build.py build -t release \
   --target-sysroot ${MINGW_PATH}/ \
   --target-toolchain ${MINGW_PATH}/bin;
 python3 build.py install;
-cp -rf ${WORKSPACE}/cangjie_runtime/std/output/* ${WORKSPACE}/cangjie_compiler/output/;
-cp -rf ${WORKSPACE}/cangjie_runtime/std/output/* ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/;
+cp -rf ${WORKSPACE}/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output/;
+cp -rf ${WORKSPACE}/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/;
 ```
 
 ### 4.4 编译 STDX 扩展库

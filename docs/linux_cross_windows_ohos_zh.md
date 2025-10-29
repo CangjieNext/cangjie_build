@@ -229,7 +229,7 @@ cp -rf ${WORKSPACE}/cangjie_runtime/runtime/output/common/linux_ohos_release_aar
 ### 4.3 编译仓颉标准库
 
 ```bash
-cd ${WORKSPACE}/cangjie_runtime/std;
+cd ${WORKSPACE}/cangjie_runtime/stdlib;
 python3 build.py clean;
 python3 build.py build -t release \
   --target windows-x86_64 \
@@ -250,8 +250,8 @@ python3 build.py build -t release \
     --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/${kernel}-${cmake_arch}/llvm/bin \
     --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py install;
-cp -rf ${WORKSPACE}/cangjie_runtime/std/output/* ${WORKSPACE}/cangjie_compiler/output/;
-cp -rf ${WORKSPACE}/cangjie_runtime/std/output/* ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/;
+cp -rf ${WORKSPACE}/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output/;
+cp -rf ${WORKSPACE}/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/;
 ```
 
 ### 4.4 编译 STDX 扩展库

@@ -206,13 +206,12 @@ cp -R output/common/linux_release_${ARCH}/{lib,runtime} $WORKSPACE/cangjie_compi
 ### 4.3 编译仓颉标准库
 
 ```bash
-cd $WORKSPACE/cangjie_runtime/std;
+cd $WORKSPACE/cangjie_runtime/stdlib;
 python3 build.py clean;
 python3 build.py build -t release \
-  --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
-  --target-lib=$OPENSSL_PATH;
+  --target-lib=$WORKSPACE/cangjie_runtime/runtime/output
 python3 build.py install;
-cp -R $WORKSPACE/cangjie_runtime/std/output/* $WORKSPACE/cangjie_compiler/output/;
+cp -R $WORKSPACE/cangjie_runtime/stdlib/output/* $WORKSPACE/cangjie_compiler/output/;
 ```
 
 ### 4.4 编译 STDX扩展库
