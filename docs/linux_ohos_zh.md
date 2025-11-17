@@ -40,9 +40,9 @@ graph LR
 > 您可以自己搭建相关构建环境，也可以基于我们提供的Docker环境进行Cangjie SDK构建，里面已内置所有构建Cangjie所需的系统工具和构建工具：
 >
 > ```bash
-> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu22_x86_kernel:v1.2
+> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu18_x86_kernel:v2.8
 > # 或
-> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu22_arm_kernel:v1.2
+> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu18_arm_kernel:v2.2
 > ```
 
 ### 2.2 系统工具安装
@@ -99,8 +99,9 @@ make install DESTDIR=${BUILD_ROOT}/ncurses-6.5;
 
 ```bash
 cd $BUILD_ROOT;
-git clone https://gitcode.com/openharmony/third_party_libedit.git -b OpenHarmony-5.0.0-Release libedit-3.1;
-cd libedit-3.1;
+git clone https://gitcode.com/openharmony/third_party_libedit.git -b OpenHarmony-5.0.0-Release;
+tar xf libedit-20210910-3.1.tar.gz;
+cd libedit-20210910-3.1;
 ./configure --with-pic --enable-shared=no --prefix=${BUILD_ROOT}/libedit-3.1;
 make -j ${tmp_cpus};
 make install;

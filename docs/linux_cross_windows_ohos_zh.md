@@ -39,9 +39,9 @@ graph LR
 > 您可以自己搭建相关构建环境，也可以基于我们提供的Docker环境进行仓颉构建，里面已内置所有构建仓颉所需的系统工具和构建工具：
 >
 > ```bash
-> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu22_x86_kernel:v1.81
+> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu18_x86_kernel:v2.8
 > # 或
-> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu22_arm_kernel:v1.81
+> docker pull swr.cn-north-4.myhuaweicloud.com/cj-docker/cangjie_ubuntu18_arm_kernel:v2.2
 > ```
 
 ### 2.2 系统工具安装
