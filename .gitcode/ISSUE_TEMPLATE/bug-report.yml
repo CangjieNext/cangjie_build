@@ -1,0 +1,107 @@
+name: 缺陷反馈|Bug
+description: 当您在构建仓颉SDK过程中发现了一个问题，需要向社区反馈时，请使用此模板。
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢对仓颉社区的支持与关注，欢迎反馈构建过程中的问题。
+        
+        请尽可能详细地填写以下信息，这将帮助我们更快地定位和解决问题。
+  - type: dropdown
+    attributes:
+      label: 系统架构
+      description: 请选择您的系统架构
+      options:
+        - x86_64
+        - aarch64
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 操作系统信息
+      description: 请提供您的操作系统详细信息（例如：Ubuntu 22.04.3 LTS, macOS 14.2.1 等）
+      placeholder: "例如：Ubuntu 22.04.3 LTS 或 macOS 14.2.1"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 发生了什么问题？
+      description: 请详细描述在构建过程中遇到的问题，包括错误信息、警告信息等
+      placeholder: "请粘贴完整的错误信息或截图"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 期望行为是什么？
+      description: 描述期望的构建结果或行为应如何
+      placeholder: ""
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 如何复现该问题
+      description: 请提供详细的复现步骤，包括您参考的构建指导书章节、执行的命令等
+      placeholder: |
+        1. 参考的构建指导书：[例如：docs/linux_zh.md]
+        2. 执行的构建步骤：
+        3. 出现问题的具体命令：
+        4. 完整的错误输出：
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 构建工具版本信息
+      description: 请提供关键构建工具的版本信息（例如：python3 --version, clang --version, cmake --version 等）
+      placeholder: |
+        Python: 
+        Clang: 
+        CMake: 
+        Ninja: 
+        OpenSSL: 
+        其他相关工具版本：
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 环境变量配置
+      description: 请提供您设置的环境变量（如 ARCH, SDK_NAME, CANGJIE_VERSION, OPENSSL_PATH 等），敏感信息请脱敏处理
+      placeholder: |
+        export ARCH=
+        export SDK_NAME=
+        export CANGJIE_VERSION=
+        export OPENSSL_PATH=
+        其他环境变量：
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 构建日志
+      description: 请提供完整的构建日志（如果日志过长，请提供关键错误部分）
+      placeholder: "可以粘贴日志或上传日志文件"
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 其他补充信息
+      description: 补充其他您认为需要提供的信息（例如：是否使用了Docker环境、是否修改了构建脚本等）
+      placeholder: ""
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: 分支版本信息
+      description: 在哪些分支版本存在该问题？
+      options:
+        - label: main
+          required: false
+        - label: dev
+          required: false
+        - label: release/1.0
+          required: false
+        - label: release/OpenHarmony-release-6.0
+          required: false
+    validations:
+      required: true
