@@ -1,11 +1,11 @@
-# ohos-x86_64、ohos-aarch64工具链 (Ubuntu 22.04)
+# ohos-x86_64、ohos-aarch64工具链
 说明：本教程将构建出OHOS SDK中宿主平台无关部分的工具链，其将在 [Linux OHOS 构建指导](linux_ohos_zh.md)、[Linux ->Windows(OHOS) 交叉构建指导](linux_cross_windows_ohos_zh.md)、[macOS OHOS 构建指导](macos_ohos_zh.md) 上分别被打包进各自的完整SDK中。
 
 ## 1 环境准备
 
 ### 1.1 系统要求
 
-- **操作系统**: Ubuntu 22.04 LTS
+- **操作系统**: 以 Ubuntu 22.04 LTS 作为示例，其他版本也可以参考本文流程
 
 - **磁盘空间**: ≥200GB
 - **内存**: ≥8GB (物理内存+交换空间)
