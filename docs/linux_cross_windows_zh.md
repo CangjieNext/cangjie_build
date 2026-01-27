@@ -84,22 +84,22 @@ export tmp_cpus=$(grep -w processor /proc/cpuinfo|wc -l);
 cd $BUILD_ROOT;
 
 # install mingw llvm toolchain
-wget https://github.com/mstorsjo/llvm-mingw/archive/refs/tags/20220906.tar.gz -q --no-check-certificate;
-tar xf 20220906.tar.gz;
-cd llvm-mingw-20220906
+wget https://github.com/mstorsjo/llvm-mingw/archive/refs/tags/20231128.tar.gz -q --no-check-certificate;
+tar xf 20231128.tar.gz;
+cd llvm-mingw-20231128
 git init llvm-project && cd llvm-project;
 git remote add origin https://gitee.com/openharmony/third_party_llvm-project.git;
 git fetch --depth 1 origin 5c68a1cb123161b54b72ce90e7975d95a8eaf2a4 && git checkout FETCH_HEAD;
 cd .. && git clone https://gitee.com/openharmony/third_party_mingw-w64.git mingw-w64;
 export TOOLCHAIN_ARCHS=x86_64
-./build-llvm.sh ${INSTALL_PATH} --disable-lldb
-./strip-llvm.sh ${INSTALL_PATH}
-./install-wrappers.sh ${INSTALL_PATH}
-./build-mingw-w64.sh ${INSTALL_PATH} --with-default-msvcrt=msvcrt
-./build-mingw-w64-tools.sh ${INSTALL_PATH}
-./build-compiler-rt.sh ${INSTALL_PATH}
-./build-libcxx.sh ${INSTALL_PATH}
-./build-mingw-w64-libraries.sh ${INSTALL_PATH}
+./build-llvm.sh --disable-cfguard ${INSTALL_PATH} --disable-lldb
+./strip-llvm.sh --disable-cfguard ${INSTALL_PATH}
+./install-wrappers.sh --disable-cfguard ${INSTALL_PATH}
+./build-mingw-w64.sh --disable-cfguard ${INSTALL_PATH} --with-default-msvcrt=msvcrt
+./build-mingw-w64-tools.sh --disable-cfguard ${INSTALL_PATH}
+./build-compiler-rt.sh --disable-cfguard ${INSTALL_PATH}
+./build-libcxx.sh --disable-cfguard ${INSTALL_PATH}
+./build-mingw-w64-libraries.sh --disable-cfguard ${INSTALL_PATH}
 cp ${INSTALL_PATH}/x86_64-w64-mingw32/lib/libmingwex.a ${INSTALL_PATH}/x86_64-w64-mingw32/lib/libssp.a
 cp ${INSTALL_PATH}/x86_64-w64-mingw32/lib/libmingwex.a ${INSTALL_PATH}/x86_64-w64-mingw32/lib/libssp_nonshared.a
 
