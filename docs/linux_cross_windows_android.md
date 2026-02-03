@@ -82,7 +82,7 @@ kanban
     texinfo binutils expat libelf-dev libdwarf-dev openssh-client ssh \
     dos2unix libxext-dev libxtst-dev libxt-dev libcups2-dev clang clang-15 libedit-dev\
     libxrender-dev zip bzip2 libopenmpi-dev vim gdb lldb libclang-15-dev libgtest-dev\
-    rpm patch libtinfo5 cpio rpm2cpio libncurses5 libncurses5-dev strace net-tools;
+    rpm patch libtinfo5 cpio rpm2cpio libncurses5 libncurses5-dev strace net-tools swig openjdk-21-jdk;
   ```
 
 ### 2.3 编译MinGW-w64及配套工具链 

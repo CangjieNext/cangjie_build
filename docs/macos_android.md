@@ -84,7 +84,7 @@ kanban
 #### (2) 其他必要的构建工具
 
 ```bash
-brew install python3 ninja llvm@16 openssl@3 bison googletest gnu-tar swig
+brew install python3 ninja llvm@16 openssl@3 bison googletest gnu-tar swig openjdk
 ```
 
 ### 2.3 安装 Andoird NDK r26d
