@@ -62,7 +62,7 @@ mkdir source;
 ### 2.2 repo下载
 ```bash
 cd $WORKSPACE;
-curl https://gitee.com/oschina/repo/raw/fork_flow/repo-py3 -o repo;
+curl https://raw.gitcode.com/gitcode-dev/repo/raw/main/repo-py3 -o repo;
 chmod a+x repo;
 pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple requests;
 ```
@@ -73,7 +73,7 @@ pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple requests;
 cd ${WORKSPACE}/source;
 # 请在命令执行前配置git user.name和user.email
 # 如果有报python找不到错的话将`#!/usr/bin/env python` 改成 `#!/usr/bin/env python3`
-${WORKSPACE}/repo init -u https://gitee.com/openharmony/manifest.git -b master --no-repo-verify;
+${WORKSPACE}/repo init -u https://gitcode.com/openharmony/manifest.git -b master --no-repo-verify;
 ${WORKSPACE}/repo sync -c;
 ```
 
