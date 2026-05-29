@@ -2,13 +2,11 @@
 
 ## 1 概述
 
-本文档说明如何在 Linux 主机构建一套可运行的 Cangjie SDK，并补齐 `wasm32-unknown-unknown` 目标所需的 compiler、runtime 与 stdlib 产物。
+本文档说明如何在 Linux 主机上构建带 wasm 目标支持的仓颉 SDK，并生成 `wasm32` 目标所需的 compiler、runtime 与 stdlib 产物。
 
-wasm 构建链路与现有交叉编译目标保持一致：
+当前 wasm 目标仍属于实验能力，编译 wasm 产物时需要显式使用 `--experimental`。
 
-1. 先构建 Linux 主机侧 `cjc`
-2. 再构建 `wasm32` 目标侧产物
-3. 最后用 `cjc --target wasm32-unknown-unknown` 做最小编译验证
+wasm 目标的用户可见写法为 `--target wasm32`。
 
 ## 2 前提条件
 
@@ -16,7 +14,7 @@ wasm 构建链路与现有交叉编译目标保持一致：
 
 请先按 [Linux Native 构建指导](linux.md) 完成主机环境准备。
 
-此外，wasm 目标默认依赖系统已安装好的 LLVM 15 与 WASI 组件。要求以下工具可直接从当前环境找到：
+此外，wasm 目标需要 LLVM 15 与 WASI 相关组件。请确认以下工具可直接从当前 shell 找到：
 
 ```bash
 python3 --version
@@ -32,29 +30,14 @@ llvm-config --version
 
 ### 2.2 环境变量
 
-#### (1) OpenSSL 环境变量设置
-
 构建 Linux 主机侧 stdlib 仍然依赖 OpenSSL 3+，因此需要先设置 `OPENSSL_PATH`：
 
-- 定位 OpenSSL 的 lib 目录
+```bash
+export OPENSSL_PATH=/path/to/openssl-3.x
+export LD_LIBRARY_PATH=$OPENSSL_PATH:$LD_LIBRARY_PATH
+```
 
-  库文件通常位于 `/usr/lib/x86_64-linux-gnu/`（x86_64）或 `/usr/lib/aarch64-linux-gnu/`（aarch64），可先确认：
-
-  ```bash
-  ls /usr/lib/x86_64-linux-gnu/libssl.so*
-  ls /usr/lib/x86_64-linux-gnu/libcrypto.so*
-  ```
-
-- 设置 `OPENSSL_PATH`
-
-  ```bash
-  export OPENSSL_PATH=/path/to/openssl-3.x
-  export LD_LIBRARY_PATH=$OPENSSL_PATH:$LD_LIBRARY_PATH
-  ```
-
-#### (2) 其他环境变量设置
-
-在后续步骤开始前，建议统一设置以下环境变量：
+设置通用构建变量：
 
 ```bash
 export WORKSPACE=/path/to/workspace
@@ -63,8 +46,6 @@ export BUILD_TYPE=release
 ```
 
 开发调试时，可将 `BUILD_TYPE` 改为 `relwithdebinfo`。
-
-wasm 目标默认直接使用系统环境中的 LLVM 15 与 WASI 组件；只要 `clang`、`llvm-config`、`wasm-ld` 等工具可直接从当前 shell 找到，就不需要额外设置 `WASM_SYSROOT`、`--target-sysroot` 或版本化 `-B` 参数。
 
 ### 2.3 源码布局
 
@@ -98,7 +79,7 @@ elif [ "${HOST_ARCH}" = "amd64" ]; then
 fi
 ```
 
-## 3 构建流程
+## 3 构建 Linux 主机侧 SDK
 
 ### 3.1 构建 Linux 主机侧 compiler
 
@@ -180,37 +161,98 @@ python3 build.py install
 cp -R output/* $WORKSPACE/cangjie_compiler/output/
 ```
 
-## 5 最小编译验证
+## 5 最小运行验证
 
-准备样例 `add.cj`：
+### 5.1 生成 wasm 可执行产物
+
+准备样例 `hello.cj`：
 
 ```cangjie
-public func add(a: Int64, b: Int64): Int64 {
-    a + b
+main() {
+    println("hello cangjie")
 }
 ```
 
-执行：
+编译 `wasm` 可执行文件：
 
 ```bash
 source $WORKSPACE/cangjie_compiler/output/envsetup.sh
 cjc --experimental \
-  --target wasm32-unknown-unknown \
-  --output-type=obj \
-  --compile-target=staticlib \
-  add.cj \
-  -o add.wasm.o
+  --target wasm32 \
+  --output-type=exe \
+  hello.cj \
+  -o hello.wasm
 ```
 
-如需保留中间产物：
+### 5.2 使用 Node.js + WASI 运行 wasm 文件
+
+仓颉 wasm `exe` 产物是 WASI command module，可使用 Node.js + WASI 做最小运行验证。
+
+准备 `run-wasi.js`：
+
+```javascript
+const fs = require('fs');
+const { WASI } = require('wasi');
+
+const wasmFile = process.argv[2];
+const wasi = new WASI({
+  version: 'preview1',
+  args: [wasmFile],
+  env: process.env,
+  preopens: {},
+});
+
+const env = new Proxy({}, {
+  get(_target, name) {
+    return (..._args) => {
+      if (name === '__main_argc_argv') {
+        return 0;
+      }
+      return 0;
+    };
+  },
+});
+
+async function main() {
+  const bytes = fs.readFileSync(wasmFile);
+  const { instance } = await WebAssembly.instantiate(bytes, {
+    env,
+    wasi_snapshot_preview1: wasi.wasiImport,
+  });
+  wasi.start(instance);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+```
+
+运行：
+
+```bash
+node --no-warnings run-wasi.js hello.wasm
+```
+
+成功时应看到：
+
+```text
+hello cangjie
+```
+
+`--no-warnings` 用于关闭 Node.js WASI API 的 `ExperimentalWarning`。
+
+### 5.3 wasm 静态库产物
+
+如果目标不是“直接运行”，而是“给后续链接阶段复用”，则使用 `--output-type=staticlib`，产物是 `.a`：
 
 ```bash
 source $WORKSPACE/cangjie_compiler/output/envsetup.sh
 cjc --experimental \
-  --target wasm32-unknown-unknown \
-  --output-type=obj \
-  --compile-target=staticlib \
+  --target wasm32 \
+  --output-type=staticlib \
   add.cj \
-  -o add.wasm.o \
-  --save-temps wasm-temps
+  -o libadd.a
 ```
+
+这里的 `.a` 是 wasm 静态库归档，内部成员是 wasm object，用途和 native 静态库类似，但它本身不是可执行程序。
