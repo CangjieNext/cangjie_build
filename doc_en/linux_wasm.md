@@ -2,13 +2,11 @@
 
 ## 1 Overview
 
-This document describes how to build a Linux-hosted Cangjie SDK and produce the compiler, runtime, and standard library artifacts required by the `wasm32-unknown-unknown` target.
+This document describes how to build a Linux-hosted Cangjie SDK with wasm target support and produce the compiler, runtime, and standard library artifacts required by the `wasm32` target.
 
-The wasm flow follows the same structure as the existing cross-compilation targets:
+The wasm target is currently experimental. Use `--experimental` when compiling wasm artifacts.
 
-1. Build the Linux host `cjc`
-2. Build target-side artifacts for `wasm32`
-3. Validate the path with a minimal `cjc --target wasm32-unknown-unknown` compilation
+The user-facing wasm target spelling is `--target wasm32`.
 
 ## 2 Prerequisites
 
@@ -16,7 +14,7 @@ The wasm flow follows the same structure as the existing cross-compilation targe
 
 First complete the host environment preparation in the [Linux Native Build Guide](linux.md).
 
-In addition, the wasm target expects LLVM 15 and WASI components to be installed in the system environment already. The following tools must be available directly from the current shell:
+In addition, the wasm target requires LLVM 15 and WASI-related components. The following tools must be available directly from the current shell:
 
 ```bash
 python3 --version
@@ -32,29 +30,14 @@ llvm-config --version
 
 ### 2.2 Environment Variables
 
-#### (1) OpenSSL Environment Variable Setup
+The Linux host stdlib build still depends on OpenSSL 3+, so configure `OPENSSL_PATH` first:
 
-The Linux host stdlib build still depends on OpenSSL 3+, so `OPENSSL_PATH` must be configured first:
+```bash
+export OPENSSL_PATH=/path/to/openssl-3.x
+export LD_LIBRARY_PATH=$OPENSSL_PATH:$LD_LIBRARY_PATH
+```
 
-- Locate the OpenSSL `lib` directory
-
-  The libraries are typically under `/usr/lib/x86_64-linux-gnu/` on x86_64 or `/usr/lib/aarch64-linux-gnu/` on aarch64. Verify with:
-
-  ```bash
-  ls /usr/lib/x86_64-linux-gnu/libssl.so*
-  ls /usr/lib/x86_64-linux-gnu/libcrypto.so*
-  ```
-
-- Set `OPENSSL_PATH`
-
-  ```bash
-  export OPENSSL_PATH=/path/to/openssl-3.x
-  export LD_LIBRARY_PATH=$OPENSSL_PATH:$LD_LIBRARY_PATH
-  ```
-
-#### (2) Other Environment Variable Setup
-
-Before continuing, set the common build variables:
+Set the common build variables:
 
 ```bash
 export WORKSPACE=/path/to/workspace
@@ -63,8 +46,6 @@ export BUILD_TYPE=release
 ```
 
 For development and debugging builds, set `BUILD_TYPE=relwithdebinfo`.
-
-The wasm target uses the system-provided LLVM 15 and WASI components directly. As long as `clang`, `llvm-config`, and `wasm-ld` are available in the current shell, no extra `WASM_SYSROOT`, `--target-sysroot`, or version-specific `-B` argument is required.
 
 ### 2.3 Source Layout
 
@@ -98,7 +79,7 @@ elif [ "${HOST_ARCH}" = "amd64" ]; then
 fi
 ```
 
-## 3 Build the Host SDK
+## 3 Build the Linux Host SDK
 
 ### 3.1 Build the Linux Host Compiler
 
@@ -180,37 +161,98 @@ python3 build.py install
 cp -R output/* $WORKSPACE/cangjie_compiler/output/
 ```
 
-## 5 Minimal Compile Validation
+## 5 Minimal Runtime Validation
 
-Prepare `add.cj`:
+### 5.1 Build the wasm Executable Artifact
+
+Prepare `hello.cj`:
 
 ```cangjie
-public func add(a: Int64, b: Int64): Int64 {
-    a + b
+main() {
+    println("hello cangjie")
 }
+```
+
+Build the wasm executable:
+
+```bash
+source $WORKSPACE/cangjie_compiler/output/envsetup.sh
+cjc --experimental \
+  --target wasm32 \
+  --output-type=exe \
+  hello.cj \
+  -o hello.wasm
+```
+
+### 5.2 Run the wasm File with Node.js + WASI
+
+Cangjie wasm `exe` output is a WASI command module. Use Node.js + WASI for minimal runtime validation.
+
+Prepare `run-wasi.js`:
+
+```javascript
+const fs = require('fs');
+const { WASI } = require('wasi');
+
+const wasmFile = process.argv[2];
+const wasi = new WASI({
+  version: 'preview1',
+  args: [wasmFile],
+  env: process.env,
+  preopens: {},
+});
+
+const env = new Proxy({}, {
+  get(_target, name) {
+    return (..._args) => {
+      if (name === '__main_argc_argv') {
+        return 0;
+      }
+      return 0;
+    };
+  },
+});
+
+async function main() {
+  const bytes = fs.readFileSync(wasmFile);
+  const { instance } = await WebAssembly.instantiate(bytes, {
+    env,
+    wasi_snapshot_preview1: wasi.wasiImport,
+  });
+  wasi.start(instance);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
 ```
 
 Run:
 
 ```bash
-source $WORKSPACE/cangjie_compiler/output/envsetup.sh
-cjc --experimental \
-  --target wasm32-unknown-unknown \
-  --output-type=obj \
-  --compile-target=staticlib \
-  add.cj \
-  -o add.wasm.o
+node --no-warnings run-wasi.js hello.wasm
 ```
 
-To keep temporary files:
+On success, the output should include:
+
+```text
+hello cangjie
+```
+
+`--no-warnings` suppresses Node.js WASI `ExperimentalWarning` output.
+
+### 5.3 wasm Static Library Artifact
+
+If the goal is not to run the output directly, but to reuse it in a later link step, use `--output-type=staticlib`, which produces a `.a` archive:
 
 ```bash
 source $WORKSPACE/cangjie_compiler/output/envsetup.sh
 cjc --experimental \
-  --target wasm32-unknown-unknown \
-  --output-type=obj \
-  --compile-target=staticlib \
+  --target wasm32 \
+  --output-type=staticlib \
   add.cj \
-  -o add.wasm.o \
-  --save-temps wasm-temps
+  -o libadd.a
 ```
+
+This `.a` file is a wasm static library archive whose members are wasm object files. It is link-time input, not a runnable program.
