@@ -21,6 +21,11 @@ To simplify the build process, this guide is based on higher operating system ve
 - Example Environment: Ubuntu 22.04
 - Build Guide: [Click](doc_en/linux_android.md)
 
+### Linux -> WebAssembly Cross Build Guide
+
+- Example Environment: Ubuntu 22.04
+- Build Guide: [Click](doc_en/linux_wasm.md)
+
 ### Linux -> Windows + Android Cross Build Guide
 
 - Example Environment: Ubuntu 22.04
