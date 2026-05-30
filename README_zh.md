@@ -21,6 +21,11 @@
 - 示例环境：Ubuntu 22.04
 - 构建指导书：[点击](docs/linux_android.md)
 
+### Linux -> WebAssembly 交叉构建指导
+
+- 示例环境：Ubuntu 22.04
+- 构建指导书：[点击](docs/linux_wasm.md)
+
 ### Linux -> Windows + Android 交叉构建指导
 
 - 示例环境：Ubuntu 22.04
@@ -65,6 +70,3 @@
 
 - 示例环境：Windows 10
 - 构建指导书：预计2026年提供
-
-
-
