@@ -27,9 +27,10 @@ kanban
     M[编译cjtrace-recover工具]
     N[编译hle工具]
     O[编译lspserver工具]
+    P[编译cjprof工具]
   5.打包和验证
-    P[组织并打包文件]
-    Q[编译Hello,Cangjie程序]
+    Q[组织并打包文件]
+    R[编译Hello,Cangjie程序]
 ```
 
 ### 1.2 关键注意事项
@@ -206,10 +207,10 @@ cd $WORKSPACE;
 ### 3.2 获取Cangjie源码
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
 ```
 
 ## 4 编译流程
@@ -228,7 +229,7 @@ export CMAKE_PREFIX_PATH=$BUILD_ROOT/libedit-3.1:$BUILD_ROOT/ncurses-6.5/usr;
 cd $WORKSPACE/cangjie_compiler;
 python3 build.py clean;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
+  -v ${CANGJIE_VERSION} \
   --no-tests \
   --target-lib=$BUILD_ROOT/ncurses-6.5/usr/lib \
   --build-cjdb;
@@ -284,15 +285,15 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-    --target ohos-x86_64 \
-    --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin \
-    --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
+  --target ohos-x86_64 \
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py build -t release \
-    --target ohos-aarch64 \
-    --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin \
-    --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
+  --target ohos-aarch64 \
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py install;
 cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```
@@ -302,17 +303,19 @@ cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```bash
 cd $WORKSPACE/cangjie_stdx;
 python3 build.py clean;
-python3 build.py build -t release --target-lib=$OPENSSL_PATH;
+python3 build.py build -t release --target-lib=$OPENSSL_PATH --include=${WORKSPACE}/cangjie_compiler/include;
 python3 build.py build -t release \
-    --target-lib=$OPENSSL_PATH \
-    --target ohos-aarch64 \
-    --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin;
+  --target-lib=$OPENSSL_PATH \
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target ohos-aarch64 \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin;
 python3 build.py build -t release \
-    --target-lib=$OPENSSL_PATH \
-    --target ohos-x86_64 \
-    --target-sysroot  ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin;
+  --target-lib=$OPENSSL_PATH \
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target ohos-x86_64 \
+  --target-sysroot  ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-${ARCH}/llvm/bin;
 python3 build.py install;
 export CANGJIE_STDX_PATH=$WORKSPACE/cangjie_stdx/target/linux_${ARCH}_cjnative/static/stdx;
 ```
@@ -393,6 +396,16 @@ python3 build.py clean;
 python3 build.py build -t release;
 python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
+```
+
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
 ```
 
 ## 5 组织并打包文件

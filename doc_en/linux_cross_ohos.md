@@ -23,8 +23,8 @@ kanban
     I[Build cjpm Tool]
     J[Build cjfmt Tool]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    K[Organize and<br>Package Files]
+    L[Build Hello,<br>Cangjie Program]
 ```
 
 ### 1.2 Key Notes
@@ -153,10 +153,10 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
 ```
 
 ## 4 Build Process
@@ -170,18 +170,18 @@ cd $WORKSPACE/cangjie_compiler;
 python3 build.py clean;
 python3 build.py build -t release --no-tests -v ${CANGJIE_VERSION};
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--product cjc \
+  -v ${CANGJIE_VERSION} \
+  --product cjc \
   --no-tests \
-	--target ohos-aarch64 \
-	--target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
-	--target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
+  --target ohos-aarch64 \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
   --build-cjdb;
 python3 build.py build -t release \
-	--product libs \
-	--target ohos-aarch64 \
-	--target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
-	--target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
+  --product libs \
+  --target ohos-aarch64 \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py install;
 python3 build.py install --host ohos-aarch64;
 cp -Rn output-aarch64-linux-ohos/* output;
@@ -219,10 +219,10 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-    --target ohos-aarch64 \
-    --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
-    --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
+  --target ohos-aarch64 \
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py install;
 cp -R output/* ${WORKSPACE}/cangjie_compiler/output/;
 cp -R output/* ${WORKSPACE}/cangjie_compiler/output-aarch64-linux-ohos;
@@ -234,10 +234,10 @@ cp -R output/* ${WORKSPACE}/cangjie_compiler/output-aarch64-linux-ohos;
 cd ${WORKSPACE}/cangjie_stdx;
 python3 build.py clean;
 python3 build.py build -t release \
-    --target-lib=${OPENSSL_PATH} \
-    --target ohos-aarch64 \
-    --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
-    --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin;
+  --target-lib=${OPENSSL_PATH} \
+  --target ohos-aarch64 \
+  --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/linux-x86_64/llvm/bin;
 python3 build.py install;
 export CANGJIE_STDX_PATH=${WORKSPACE}/cangjie_stdx/target/linux_ohos_aarch64_cjnative/static/stdx;
 ```

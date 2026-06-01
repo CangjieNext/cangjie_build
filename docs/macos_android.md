@@ -27,10 +27,11 @@ kanban
     M[编译cjtrace-recover工具]
     N[编译hle工具]
     O[编译lspserver工具]
-    P[编译互操作库]
+    P[编译cjprof工具]
+    Q[编译互操作库]
   5.打包和验证
-    P[组织并打包文件]
-    Q[编译Hello,Cangjie程序]
+    R[组织并打包文件]
+    S[编译Hello,Cangjie程序]
 ```
 
 ## 2 环境准备
@@ -146,11 +147,11 @@ cd $WORKSPACE;
 ### 3.2 获取仓颉源码
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b main;
 ```
 
 ## 4 编译流程
@@ -180,9 +181,9 @@ python3 build.py clean;
 python3 build.py build -t release -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--target android26-aarch64 \
-	--target-toolchain ${ANDROID_NDK_ROOT}/toolchains;
+  -v ${CANGJIE_VERSION} \
+  --target android26-aarch64 \
+  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains;
 python3 build.py install;
 cp -R output/common/darwin_release_${ARCH}/{lib,runtime}        ${WORKSPACE}/cangjie_compiler/output;
 cp -R output/common/linux_android_release_aarch64/{lib,runtime} ${WORKSPACE}/cangjie_compiler/output;
@@ -197,10 +198,10 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-	--target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-	--target android26-aarch64 \
-	--include=$OPENSSL_PATH/../include \
-	--target-toolchain ${ANDROID_TOOLCHAIN};
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target android26-aarch64 \
+  --include=$OPENSSL_PATH/../include \
+  --target-toolchain ${ANDROID_TOOLCHAIN};
 
 python3 build.py install;
 cp -R output/* $WORKSPACE/cangjie_compiler/output/;
@@ -211,11 +212,12 @@ cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```bash
 cd $WORKSPACE/cangjie_stdx;
 python3 build.py clean;
-python3 build.py build -t release --target-lib=$OPENSSL_PATH;
+python3 build.py build -t release --target-lib=$OPENSSL_PATH --include=${WORKSPACE}/cangjie_compiler/include;
 python3 build.py build -t release \
-	--target android26-aarch64 \
-	--include=/opt/buildtools/openssl-3.0.9/include \
-	--target-toolchain ${ANDROID_TOOLCHAIN};
+  --target android26-aarch64 \
+  --include=/opt/buildtools/openssl-3.0.9/include \
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-toolchain ${ANDROID_TOOLCHAIN};
 python3 build.py install;
 export CANGJIE_STDX_PATH=$WORKSPACE/cangjie_stdx/target/darwin_${ARCH}_cjnative/static/stdx;
 ```
@@ -298,7 +300,17 @@ python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
 ```
 
-#### (8) Java Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
+```
+
+#### (9) Java Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/java/build
@@ -311,7 +323,7 @@ python3 build.py install --prefix ${WORKSPACE}/cangjie_compiler/output;
 export PATH=${ANDROID_TOOLCHAIN}:$PATH;
 source ${WORKSPACE}/cangjie_compiler/output/envsetup.sh;
 python3 build.py clean;
-python3 build.py build -t ${build_type} \
+python3 build.py build -t release \
   --target aarch64-linux-android26 \
   --target-sysroot ${ANDROID_TOOLCHAIN}/../sysroot \
   --target-toolchain ${ANDROID_TOOLCHAIN} \

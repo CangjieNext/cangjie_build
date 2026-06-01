@@ -27,10 +27,11 @@ kanban
     M[Build cjtrace-recover<br>Tool]
     N[Build hle Tool]
     O[Build lspserver Tool]
-    P[Build Interop Library]
+    P[Build cjprof Tool]
+    Q[Build Interop Library]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    R[Organize and<br>Package Files]
+    S[Build Hello,<br>Cangjie Program]
 ```
 
 ## 2 Environment Preparation
@@ -146,11 +147,11 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b main;
 ```
 
 ## 4 Build Process
@@ -180,9 +181,9 @@ python3 build.py clean;
 python3 build.py build -t release -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--target android26-aarch64 \
-	--target-toolchain ${ANDROID_NDK_ROOT}/toolchains;
+  -v ${CANGJIE_VERSION} \
+  --target android26-aarch64 \
+  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains;
 python3 build.py install;
 cp -R output/common/darwin_release_${ARCH}/{lib,runtime}        ${WORKSPACE}/cangjie_compiler/output;
 cp -R output/common/linux_android_release_aarch64/{lib,runtime} ${WORKSPACE}/cangjie_compiler/output;
@@ -197,10 +198,10 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-	--target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-	--target android26-aarch64 \
-	--include=$OPENSSL_PATH/../include \
-	--target-toolchain ${ANDROID_TOOLCHAIN};
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target android26-aarch64 \
+  --include=$OPENSSL_PATH/../include \
+  --target-toolchain ${ANDROID_TOOLCHAIN};
 
 python3 build.py install;
 cp -R output/* $WORKSPACE/cangjie_compiler/output/;
@@ -211,11 +212,11 @@ cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```bash
 cd $WORKSPACE/cangjie_stdx;
 python3 build.py clean;
-python3 build.py build -t release --target-lib=$OPENSSL_PATH;
+python3 build.py build -t release --target-lib=$OPENSSL_PATH --include=${WORKSPACE}/cangjie_compiler/include;
 python3 build.py build -t release \
-	--target android26-aarch64 \
-	--include=/opt/buildtools/openssl-3.0.9/include \
-	--target-toolchain ${ANDROID_TOOLCHAIN};
+  --target android26-aarch64 \
+  --include=/opt/buildtools/openssl-3.0.9/include \
+  --target-toolchain ${ANDROID_TOOLCHAIN};
 python3 build.py install;
 export CANGJIE_STDX_PATH=$WORKSPACE/cangjie_stdx/target/darwin_${ARCH}_cjnative/static/stdx;
 ```
@@ -298,7 +299,17 @@ python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
 ```
 
-#### (8) Java Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
+```
+
+#### (9) Java Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/java/build

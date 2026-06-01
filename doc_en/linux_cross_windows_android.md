@@ -27,10 +27,11 @@ kanban
     M[Build cjtrace-recover<br>Tool]
     N[Build hle Tool]
     O[Build lspserver Tool]
-    P[Build Interop Library]
+    P[Build cjprof Tool]
+    Q[Build Interop Library]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    R[Organize and<br>Package Files]
+    S[Build Hello,<br>Cangjie Program]
 ```
 
 ### 1.2 Key Notes
@@ -233,10 +234,10 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
 ```
 
 ## 4 Build Process
@@ -344,9 +345,10 @@ cd ${WORKSPACE}/cangjie_stdx;
 python3 build.py clean;
 python3 build.py build -t release \
   --target-lib=${MINGW_PATH}/x86_64-w64-mingw32/lib \
-	--target windows-x86_64 \
+  --target windows-x86_64 \
   --target-sysroot ${MINGW_PATH}/ \
-  --target-toolchain ${MINGW_PATH}/bin;
+  --target-toolchain ${MINGW_PATH}/bin \
+  --include=${WORKSPACE}/cangjie_compiler/include;
 python3 build.py install;
 export CANGJIE_STDX_PATH=${WORKSPACE}/cangjie_stdx/target/windows_x86_64_cjnative/static/stdx;
 ```
@@ -429,7 +431,16 @@ python3 build.py install;
 cp $WORKSPACE/cangjie_tools/cangjie-language-server/output/bin/LSPServer.exe ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/tools/bin;
 ```
 
-#### (8) Java Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release --target windows-x86_64;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof.exe ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/tools/bin;
+```
+
+#### (9) Java Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/java/build

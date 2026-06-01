@@ -26,9 +26,10 @@ kanban
     M[Build cjtrace-recover<br>Tool]
     N[Build hle Tool]
     O[Build lspserver Tool]
+    P[Build cjprof Tool]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    Q[Organize and<br>Package Files]
+    R[Build Hello,<br>Cangjie Program]
 ```
 
 ## 2 Environment Preparation
@@ -129,10 +130,10 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
 ```
 
 ## 4 Build Process
@@ -180,7 +181,9 @@ cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```bash
 cd $WORKSPACE/cangjie_stdx;
 python3 build.py clean;
-python3 build.py build -t release --target-lib=$OPENSSL_PATH;
+python3 build.py build -t release \
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-lib=$OPENSSL_PATH;
 python3 build.py install;
 export CANGJIE_STDX_PATH=$WORKSPACE/cangjie_stdx/target/darwin_${ARCH}_cjnative/static/stdx;
 ```
@@ -261,6 +264,16 @@ python3 build.py clean;
 python3 build.py build -t release;
 python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
+```
+
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
 ```
 
 ## 5 Organize and Package Files

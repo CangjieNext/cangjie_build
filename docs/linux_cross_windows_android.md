@@ -27,10 +27,11 @@ kanban
     M[编译cjtrace-recover工具]
     N[编译hle工具]
     O[编译lspserver工具]
-    P[编译互操作库]
+    P[编译cjprof工具]
+    Q[编译互操作库]
   5.打包和验证
-    P[组织并打包文件]
-    Q[编译Hello,Cangjie程序]
+    R[组织并打包文件]
+    S[编译Hello,Cangjie程序]
 ```
 
 ### 1.2 关键注意事项
@@ -233,10 +234,10 @@ cd $WORKSPACE;
 ### 3.2 获取仓颉源码
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
 ```
 
 ## 4 编译流程
@@ -344,9 +345,10 @@ cd ${WORKSPACE}/cangjie_stdx;
 python3 build.py clean;
 python3 build.py build -t release \
   --target-lib=${MINGW_PATH}/x86_64-w64-mingw32/lib \
-	--target windows-x86_64 \
+  --target windows-x86_64 \
   --target-sysroot ${MINGW_PATH}/ \
-  --target-toolchain ${MINGW_PATH}/bin;
+  --target-toolchain ${MINGW_PATH}/bin \
+  --include=${WORKSPACE}/cangjie_compiler/include;
 python3 build.py install;
 export CANGJIE_STDX_PATH=${WORKSPACE}/cangjie_stdx/target/windows_x86_64_cjnative/static/stdx;
 ```
@@ -393,7 +395,7 @@ cp $WORKSPACE/cangjie_tools/cjlint/dist/config/*       ${WORKSPACE}/cangjie_comp
 ```bash
 cd ${WORKSPACE}/cangjie_tools/cjcov/build;
 python3 build.py clean;
-python3 build.py build -t ${build_type} --target windows-x86_64;
+python3 build.py build -t release --target windows-x86_64;
 python3 build.py install;
 cp $WORKSPACE/cangjie_tools/cjcov/dist/cjcov.exe ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/tools/bin;
 ```
@@ -429,7 +431,17 @@ python3 build.py install;
 cp $WORKSPACE/cangjie_tools/cangjie-language-server/output/bin/LSPServer.exe ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/tools/bin;
 ```
 
-#### (8) Java Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof.exe ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
+```
+
+#### (9) Java Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/java/build

@@ -27,10 +27,11 @@ kanban
     M[Build cjtrace-recover<br>Tool]
     N[Build hle Tool]
     O[Build lspserver Tool]
-    P[Build Interop Library]
+    P[Build cjprof Tool]
+    Q[Build Interop Library]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    R[Organize and<br>Package Files]
+    S[Build Hello,<br>Cangjie Program]
 ```
 
 ### 1.2 Key Notes
@@ -214,11 +215,11 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b main;
 ```
 
 ## 4 Build Process
@@ -237,13 +238,13 @@ Execute build:
 cd $WORKSPACE/cangjie_compiler;
 python3 build.py clean;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
+  -v ${CANGJIE_VERSION} \
   --no-tests \
   --target-lib=$BUILD_ROOT/ncurses-6.5/usr/lib \
   --build-cjdb;
 python3 build.py build -t release \
-	--target android26-aarch64 \
-	--android-ndk ${ANDROID_NDK_ROOT};
+  --target android26-aarch64 \
+  --android-ndk ${ANDROID_NDK_ROOT};
 python3 build.py install;
 ```
 
@@ -261,8 +262,8 @@ python3 build.py clean;
 python3 build.py build -t release -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
-    --target android26-aarch64 \
-	  --target-CANGJIE_VERSION ${ANDROID_NDK_ROOT}/toolchains \
+  --target android26-aarch64 \
+  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains \
     -v ${CANGJIE_VERSION};
 python3 build.py install;
 cp -R output/common/linux_release_x86_64/{lib,runtime}          ${WORKSPACE}/cangjie_compiler/output;
@@ -279,9 +280,9 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release\
-	  --target android26-aarch64 \
-    --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-	  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin
+  --target android26-aarch64 \
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin
 python3 build.py install;
 cp -R $WORKSPACE/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/output/;
 ```
@@ -292,8 +293,9 @@ cp -R $WORKSPACE/cangjie_runtime/stdlib/output/* ${WORKSPACE}/cangjie_compiler/o
 cd ${WORKSPACE}/cangjie_stdx;
 python3 build.py clean;
 python3 build.py build -t release \
-	--target-toolchain ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin \
-	--target android26-aarch64;
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-toolchain ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin \
+  --target android26-aarch64;
 
 python3 build.py install;
 export CANGJIE_STDX_PATH=${WORKSPACE}/cangjie_stdx/target/linux_android_aarch64_cjnative/static/stdx;
@@ -377,7 +379,17 @@ python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
 ```
 
-#### (8) Java Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib
+```
+
+#### (9) Java Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/java/build

@@ -27,10 +27,11 @@ kanban
     M[Build cjtrace-recover<br>Tool]
     N[Build hle Tool]
     O[Build lspserver Tool]
-    P[Build Interop Library]
+    P[Build cjprof Tool]
+    Q[Build Interop Library]
   5.Packaging and Verification
-    P[Organize and<br>Package Files]
-    Q[Build Hello,<br>Cangjie Program]
+    R[Organize and<br>Package Files]
+    S[Build Hello,<br>Cangjie Program]
 ```
 
 ## 2 Environment Preparation
@@ -152,11 +153,11 @@ cd $WORKSPACE;
 ### 3.2 Get Cangjie Source Code
 
 ```bash
-git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_tools.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b dev;
-git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b dev;
+git clone https://gitcode.com/Cangjie/cangjie_compiler.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_runtime.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_tools.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_stdx.git -b main;
+git clone https://gitcode.com/Cangjie/cangjie_multiplatform_interop.git -b main;
 ```
 
 ## 4 Build Process
@@ -169,17 +170,17 @@ cd $WORKSPACE/cangjie_compiler;
 python3 build.py clean;
 python3 build.py build -t release -v ${CANGJIE_VERSION} --no-tests --build-cjdb;
 python3 build.py build -t release \
-	--target ${IOS_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SYSROOT};
+  --target ${IOS_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SYSROOT};
 python3 build.py build -t release \
-	--target ${IOS_SIMULATOR_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SIMULATOR_SYSROOT};
+  --target ${IOS_SIMULATOR_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py build -t release \
-	--target ${IOS_SIMULATOR_X86_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SIMULATOR_SYSROOT};
+  --target ${IOS_SIMULATOR_X86_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py install;
 ```
 
@@ -197,19 +198,19 @@ python3 build.py clean;
 python3 build.py build -t release -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--target ${IOS_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN};
+  -v ${CANGJIE_VERSION} \
+  --target ${IOS_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN};
 python3 build.py install;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--target ${IOS_SIMULATOR_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN};
+  -v ${CANGJIE_VERSION} \
+  --target ${IOS_SIMULATOR_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN};
 python3 build.py install;
 python3 build.py build -t release \
-	-v ${CANGJIE_VERSION} \
-	--target ${IOS_SIMULATOR_X86_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN};
+  -v ${CANGJIE_VERSION} \
+  --target ${IOS_SIMULATOR_X86_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN};
 python3 build.py install;
 cp -R output/common/darwin_release_${ARCH}/{lib,runtime}        ${WORKSPACE}/cangjie_compiler/output;
 cp -R output/common/ios_release_aarch64/{lib,runtime}           ${WORKSPACE}/cangjie_compiler/output;
@@ -226,23 +227,23 @@ python3 build.py build -t release \
   --target-lib=$WORKSPACE/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-	--target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-	--target-lib=$OPENSSL_PATH \
-	--target ${IOS_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SYSROOT};
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-lib=$OPENSSL_PATH \
+  --target ${IOS_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SYSROOT};
 python3 build.py build -t release \
-	--target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
   --target-lib=$OPENSSL_PATH \
   --target ${IOS_SIMULATOR_TARGET} \
   --target-toolchain ${XCODE_TOOLCHAIN} \
   --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py build -t release \
-	--target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
-	--target-lib=$OPENSSL_PATH \
-	--target ${IOS_SIMULATOR_X86_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SIMULATOR_SYSROOT};
+  --target-lib=${WORKSPACE}/cangjie_runtime/runtime/output \
+  --target-lib=$OPENSSL_PATH \
+  --target ${IOS_SIMULATOR_X86_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py install;
 cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```
@@ -252,22 +253,24 @@ cp -R output/* $WORKSPACE/cangjie_compiler/output/;
 ```bash
 cd $WORKSPACE/cangjie_stdx;
 python3 build.py clean;
-python3 build.py build -t release --target-lib=$OPENSSL_PATH;
+python3 build.py build -t release --include=${WORKSPACE}/cangjie_compiler/include --target-lib=$OPENSSL_PATH;
 python3 build.py build -t release \
-	--target-lib=$OPENSSL_PATH \
-	--target ${IOS_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SYSROOT};
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-lib=$OPENSSL_PATH \
+  --target ${IOS_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SYSROOT};
 python3 build.py build -t release \
-	--target-lib=$OPENSSL_PATH \
-	--target ${IOS_SIMULATOR_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} --target-sysroot ${IOS_SIMULATOR_SYSROOT};
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-lib=$OPENSSL_PATH \
+  --target ${IOS_SIMULATOR_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py build -t release \
-	--include=${WORKSPACE}/cangjie_compiler/include \
-	--target-lib=$OPENSSL_PATH \
-	--target ${IOS_SIMULATOR_X86_TARGET} \
-	--target-toolchain ${XCODE_TOOLCHAIN} \
-	--target-sysroot ${IOS_SIMULATOR_SYSROOT};
+  --include=${WORKSPACE}/cangjie_compiler/include \
+  --target-lib=$OPENSSL_PATH \
+  --target ${IOS_SIMULATOR_X86_TARGET} \
+  --target-toolchain ${XCODE_TOOLCHAIN} \
+  --target-sysroot ${IOS_SIMULATOR_SYSROOT};
 python3 build.py install;
 export CANGJIE_STDX_PATH=$WORKSPACE/cangjie_stdx/target/darwin_${ARCH}_cjnative/static/stdx;
 ```
@@ -350,7 +353,17 @@ python3 build.py install;
 cp ${WORKSPACE}/cangjie_tools/cangjie-language-server/output/bin/LSPServer ${WORKSPACE}/cangjie_compiler/output/tools/bin
 ```
 
-#### (8) Objective-C Interop
+#### (8) cjprof
+
+```bash
+cd ${WORKSPACE}/cangjie_tools/cjprof/build;
+python3 build.py build -t release;
+python3 build.py install;
+cp $WORKSPACE/cangjie_tools/cjprof/dist/bin/cjprof ${WORKSPACE}/cangjie_compiler/output/tools/bin
+cp $WORKSPACE/cangjie_tools/cjprof/dist/lib/* ${WORKSPACE}/cangjie_compiler/output/tools/lib;
+```
+
+#### (9) Objective-C Interop
 
 ```bash
 cd ${WORKSPACE}/cangjie_multiplatform_interop/objc/build
@@ -361,7 +374,7 @@ python3 build.py install --prefix ${WORKSPACE}/cangjie_compiler/output
 python3 build.py build   --target darwin_aarch64
 python3 build.py install --target darwin_aarch64 --prefix ${WORKSPACE}/cangjie_compiler/output
 
-python3 build.py build   --target ios_aarch64 --target-lib=${IOS_TARGET} --target-toolchain ${XCODE_TOOLCHAIN} --target-sysroot ${IOS_SYSROOT}	
+python3 build.py build   --target ios_aarch64 --target-lib=${IOS_TARGET} --target-toolchain ${XCODE_TOOLCHAIN} --target-sysroot ${IOS_SYSROOT}
 python3 build.py install --target ios_aarch64 --prefix ${WORKSPACE}/cangjie_compiler/output
 
 python3 build.py build   --target ios_simulator_aarch64 --target-lib=${IOS_SIMULATOR_TARGET} --target-toolchain ${XCODE_TOOLCHAIN} --target-sysroot ${IOS_SIMULATOR_SYSROOT}
