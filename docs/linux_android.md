@@ -142,7 +142,7 @@ mkdir -p ${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/local
 ls -l ${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/
 
 cd openssl-3.0.9
-# cofiguring
+# configuring
 mkdir -p build
 cd build
 ../Configure android-arm64 -D__ANDROID_API__=31 --prefix=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/local --with-zlib-include=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include --with-zlib-lib=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib
