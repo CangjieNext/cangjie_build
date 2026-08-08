@@ -146,7 +146,7 @@ mv ${INSTALL_PATH}/windows-x86/3.11.4 ${INSTALL_PATH}/windows-x86/python-3.11.4
 unzip ${INSTALL_PATH}/python-3.11.4-embed-amd64.zip -d ${INSTALL_PATH}/windows-x86/python-3.11.4
 ```
 
-### 2.5 安装 Andoird NDK r26d
+### 2.5 安装 Android NDK r26d
 
 ```bash
 install_dir=/opt/buildtools/android-ndk-r26d
