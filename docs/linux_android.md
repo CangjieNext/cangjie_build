@@ -124,7 +124,7 @@ make -j ${tmp_cpus};
 make install;
 ```
 
-### 2.4 安装 Andoird NDK r26d
+### 2.4 安装 Android NDK r26d
 
 ```bash
 install_dir=/opt/buildtools/android-ndk-r26d
