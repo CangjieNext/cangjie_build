@@ -67,7 +67,7 @@ kanban
   sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install=/path/to/cmake
   
   # 使用前将cmake/bin加入环境变量
-  PATH="/Applications/CMake.app/Contents/bin:$PATH”
+  PATH="/Applications/CMake.app/Contents/bin:$PATH"
   ```
 
 - 使用tar.gz: 
