@@ -163,7 +163,7 @@ python3 build.py install;
 python3 build.py build -t release \
   --product libs \
   --target ohos-aarch64  \
-  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/darwin-${cmake_arch}/llvm/bin \
+  --target-toolchain ${OHOS_ROOT}/prebuilts/clang/ohos/darwin_${cmake_arch}/llvm/bin \
   --target-sysroot ${OHOS_ROOT}/out/sdk/obj/third_party/musl/sysroot;
 python3 build.py install;
 ```
