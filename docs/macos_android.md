@@ -88,7 +88,7 @@ kanban
 brew install python3 ninja llvm@16 openssl@3 bison googletest gnu-tar swig openjdk
 ```
 
-### 2.3 安装 Andoird NDK r26d
+### 2.3 安装 Android NDK r26d
 
 ```bash
 export BUILD_ROOT=/opt/buildtools;
