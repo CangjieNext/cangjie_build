@@ -146,7 +146,7 @@ mv ${INSTALL_PATH}/windows-x86/3.11.4 ${INSTALL_PATH}/windows-x86/python-3.11.4
 unzip ${INSTALL_PATH}/python-3.11.4-embed-amd64.zip -d ${INSTALL_PATH}/windows-x86/python-3.11.4
 ```
 
-### 2.5 安装 Andoird NDK r26d
+### 2.5 安装 Android NDK r26d
 
 ```bash
 install_dir=/opt/buildtools/android-ndk-r26d
@@ -164,7 +164,7 @@ mkdir -p ${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/local
 ls -l ${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/
 
 cd openssl-3.0.9
-# cofiguring
+# configuring
 mkdir -p build
 cd build
 ../Configure android-arm64 -D__ANDROID_API__=31 --prefix=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/local --with-zlib-include=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include --with-zlib-lib=${install_dir}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib
