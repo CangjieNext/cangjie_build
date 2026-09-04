@@ -344,7 +344,7 @@ cp $WORKSPACE/cangjie_tools/cjlint/dist/config/*       ${WORKSPACE}/cangjie_comp
 ```bash
 cd ${WORKSPACE}/cangjie_tools/cjcov/build;
 python3 build.py clean;
-python3 build.py build -t ${build_type} --target windows-x86_64;
+python3 build.py build -t release --target windows-x86_64;
 python3 build.py install;
 cp $WORKSPACE/cangjie_tools/cjcov/dist/cjcov.exe ${WORKSPACE}/cangjie_compiler/output-x86_64-w64-mingw32/tools/bin;
 ```

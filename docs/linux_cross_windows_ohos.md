@@ -131,7 +131,7 @@ make install > install.log;
 
 ### 2.4. 编译ohos-x86_64、ohos-aarch64工具链
 
-[请参考编译ohos-x86_64、ohos-aarch64工具链](linux_ohos_toolchain.md)](linux_ohos_toolchain.md)
+[请参考编译ohos-x86_64、ohos-aarch64工具链](linux_ohos_toolchain.md)
 
 ```bash
 export OHOS_ROOT=/opt/buildtools/ohos_root;
@@ -294,12 +294,12 @@ python3 build.py install;
 python3 build.py build -t release \
   --target ohos-x86_64 \
   --target-toolchain ${OHOS_ROOT} \
-  -v ${cangjie_version};
+  -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
   --target ohos-aarch64 \
   --target-toolchain ${OHOS_ROOT} \
-  -v ${cangjie_version};
+  -v ${CANGJIE_VERSION};
 python3 build.py install;
 cp -R output/common/linux_release_x86_64/{lib,runtime}       ${WORKSPACE}/cangjie_compiler/output;
 cp -R output/common/windows_release_x86_64/{lib,runtime}     ${WORKSPACE}/cangjie_compiler/output;

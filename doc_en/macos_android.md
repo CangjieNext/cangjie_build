@@ -335,7 +335,7 @@ python3 build.py install --prefix ${WORKSPACE}/cangjie_compiler/output;
 export PATH=${ANDROID_TOOLCHAIN}:$PATH;
 source ${WORKSPACE}/cangjie_compiler/output/envsetup.sh;
 python3 build.py clean;
-python3 build.py build -t ${build_type} \
+python3 build.py build -t release \
   --target aarch64-linux-android26 \
   --target-sysroot ${ANDROID_TOOLCHAIN}/../sysroot \
   --target-toolchain ${ANDROID_TOOLCHAIN} \

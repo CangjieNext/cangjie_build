@@ -185,12 +185,12 @@ python3 build.py install;
 python3 build.py build -t release \
   --target ohos-x86_64 \
   --target-toolchain ${OHOS_ROOT} \
-  -v ${cangjie_version};
+  -v ${CANGJIE_VERSION};
 python3 build.py install;
 python3 build.py build -t release \
   --target ohos-aarch64 \
   --target-toolchain ${OHOS_ROOT} \
-  -v ${cangjie_version};
+  -v ${CANGJIE_VERSION};
 python3 build.py install;
 cp -R output/common/darwin_release_${ARCH}/{lib,runtime}     ${WORKSPACE}/cangjie_compiler/output;
 cp -R output/common/linux_ohos_release_aarch64/{lib,runtime} ${WORKSPACE}/cangjie_compiler/output;
