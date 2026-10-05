@@ -1,5 +1,5 @@
 # ohos-x86_64、ohos-aarch64工具链
-说明：本教程将构建出OHOS SDK中宿主平台无关部分的工具链，其将在 [Linux OHOS 构建指导](linux_ohos_zh.md)、[Linux ->Windows(OHOS) 交叉构建指导](linux_cross_windows_ohos_zh.md)、[macOS OHOS 构建指导](macos_ohos_zh.md) 上分别被打包进各自的完整SDK中。
+说明：本教程将构建出OHOS SDK中宿主平台无关部分的工具链，其将在 [Linux OHOS 构建指导](linux_ohos.md)、[Linux ->Windows(OHOS) 交叉构建指导](linux_cross_windows_ohos.md)、[macOS OHOS 构建指导](macos_ohos.md) 上分别被打包进各自的完整SDK中。
 
 ## 1 环境准备
 
