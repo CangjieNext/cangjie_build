@@ -1,0 +1,21 @@
+# 仓颉社区统一提交校验 hooks
+# 产品仓 .pre-commit-config.yaml 通过 repo + rev 引用本文件
+
+- id: cangjie-commitlint
+  name: cangjie commitlint (Conventional Commits)
+  # 注意：--edit 必须是 entry 的最后一个参数，否则 pre-commit 追加的
+  # commit-msg 文件名会被 --extends 当成配置模块（ERR_UNKNOWN_FILE_EXTENSION）
+  entry: commitlint --color=false --extends @commitlint/config-conventional --edit
+  language: node
+  additional_dependencies:
+    - '@commitlint/cli@17.8.1'
+    - '@commitlint/config-conventional@17.8.1'
+  stages: [commit-msg]
+
+- id: cangjie-dco
+  name: cangjie DCO (Signed-off-by)
+  # pygrep 内置正则检查器，零额外依赖，跨平台无 shell 依赖
+  entry: '(?im)^\s*Signed-off-by:\s+.+<[^<>@\s]+@[^<>\s]+>\s*$'
+  language: pygrep
+  args: [--negate]
+  stages: [commit-msg]

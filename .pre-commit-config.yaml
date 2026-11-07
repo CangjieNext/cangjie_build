@@ -1,0 +1,27 @@
+# 本仓自身也遵循 Conventional Commits + DCO
+# 注意：hook 定义与 .pre-commit-hooks.yaml 必须保持一致（改一处要同步改另一处）
+default_install_hook_types: [commit-msg]
+# 关键：强制复用系统 node，跳过 nodeenv 从 nodejs.org 下载 Node 二进制
+# 注意：Windows 上 nodeenv 不支持 -n system，需改用其他方式
+default_language_version:
+  node: system
+
+repos:
+  - repo: local
+    hooks:
+      - id: cangjie-commitlint
+        name: cangjie commitlint (Conventional Commits)
+        # --edit 必须是最后一个参数
+        entry: commitlint --color=false --extends @commitlint/config-conventional --edit
+        language: node
+        additional_dependencies:
+          - '@commitlint/cli@17.8.1'
+          - '@commitlint/config-conventional@17.8.1'
+        stages: [commit-msg]
+
+      - id: cangjie-dco
+        name: cangjie DCO (Signed-off-by)
+        entry: '(?im)^\s*Signed-off-by:\s+.+<[^<>@\s]+@[^<>\s]+>\s*$'
+        language: pygrep
+        args: [--negate]
+        stages: [commit-msg]
